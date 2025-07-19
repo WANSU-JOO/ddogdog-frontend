@@ -1,11 +1,18 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["vite/client", "./src/types/kakao"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
     }
-  ]
+  }
 }

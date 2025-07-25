@@ -1,15 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/HomeView.vue'
-import KakaoCallback from '@/views/KakaoLoginCallback.vue'
-
-const routes = [
-  { path: '/', component: Home },
-  { path: '/oauth/kakao/callback', component: KakaoCallback },
-]
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import KakaoLoginCallback from '@/views/KakaoLoginCallback.vue'
+import CalendarView from '@/views/CalendarView.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+    },
+    {
+      path: '/oauth/callback/kakao',
+      name: 'kakaoCallback',
+      component: KakaoLoginCallback,
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: CalendarView,
+    },
+  ],
 })
 
 export default router

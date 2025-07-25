@@ -7,17 +7,14 @@
             <img class="h-8 w-auto" src="@/assets/logo.svg" alt="Logo" />
           </router-link>
         </div>
-        <div class="flex items-center">
-          <template v-if="userStore.isLoggedIn">
-            <span class="text-gray-700">{{ userStore.name }}님 환영합니다</span>
+        <div class="flex items-center gap-4">
+          <router-link to="/" class="text-gray-700 hover:text-gray-900">홈</router-link>
+          <router-link to="/calendar" class="text-gray-700 hover:text-gray-900">캘린더</router-link>
+          <template v-if="!isLoggedIn">
+            <router-link to="/login" class="text-gray-700 hover:text-gray-900">로그인</router-link>
           </template>
           <template v-else>
-            <button
-              @click="handleKakaoLogin"
-              class="bg-yellow-400 text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-500"
-            >
-              카카오 로그인
-            </button>
+            <button @click="logout" class="text-gray-700 hover:text-gray-900">로그아웃</button>
           </template>
         </div>
       </div>

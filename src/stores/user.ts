@@ -1,61 +1,79 @@
 import { defineStore } from 'pinia'
+import axios from '@/api/axios'
 
 interface UserState {
-  name: string
-  email: string | null
-  userId: string | null
   isLoggedIn: boolean
+  name: string | null
+  accessToken: string | null
 }
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    name: '',
-    email: null,
-    userId: null,
     isLoggedIn: false,
+    name: null,
+    accessToken: null,
   }),
+
   actions: {
-    setUserInfo({ username, email, userId }: { username: string; email: string; userId: string }) {
-      this.name = username
-      this.email = email
-      this.userId = userId
+    setUserInfo(name: string, accessToken: string) {
+      this.name = name
+      this.accessToken = accessToken
       this.isLoggedIn = true
+
+      // 토큰을 localStorage에 저장
+      localStorage.setItem('accessToken', accessToken)
     },
-    logout() {
-      this.name = ''
-      this.email = null
-      this.userId = null
-      this.isLoggedIn = false
-      localStorage.removeItem('token')
-    },
+
     async checkLoginStatus() {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('accessToken')
       if (!token) {
         this.logout()
         return
       }
 
       try {
-        // 토큰이 있다면 서버에 사용자 정보 요청
-        const response = await fetch('http://localhost:8080/api/auth/me', {
+        // 토큰으로 사용자 정보 검증
+        const response = await axios.get('/api/auth/verify', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
 
-        if (!response.ok) {
-          throw new Error('Invalid token')
+        if (response.data.name) {
+          this.name = response.data.name
+          this.accessToken = token
+          this.isLoggedIn = true
+        } else {
+          this.logout()
         }
-
-        const userData = await response.json()
-        this.setUserInfo({
-          username: userData.username,
-          email: userData.email,
-          userId: userData.userId,
-        })
       } catch (error) {
-        console.error('Failed to verify token:', error)
+        if (error instanceof Error) {
+          console.error('토큰 검증 중 오류 발생:', error.message)
+        }
         this.logout()
+      }
+    },
+
+    async logout() {
+      try {
+        // 서버에 로그아웃 요청
+        if (this.accessToken) {
+          await axios.post('/api/auth/logout', null, {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+          })
+        }
+      } catch (error) {
+        console.error('로그아웃 중 오류 발생:', error)
+      } finally {
+        // 로컬 상태 초기화
+        this.name = null
+        this.accessToken = null
+        this.isLoggedIn = false
+
+        // localStorage에서 토큰 제거
+        localStorage.removeItem('accessToken')
       }
     },
   },

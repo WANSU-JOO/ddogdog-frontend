@@ -18,7 +18,7 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/oauth/callback/kakao',
+      path: '/oauth/kakao/callback',
       name: 'kakaoCallback',
       component: KakaoLoginCallback,
     },

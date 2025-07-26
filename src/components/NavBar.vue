@@ -11,7 +11,7 @@
           <router-link to="/" class="text-gray-700 hover:text-gray-900">홈</router-link>
           <router-link to="/calendar" class="text-gray-700 hover:text-gray-900">캘린더</router-link>
           <template v-if="!userStore.isLoggedIn">
-            <router-link to="/login" class="text-gray-700 hover:text-gray-900">로그인</router-link>
+            <KakaoLoginButton />
           </template>
           <template v-else>
             <div class="flex items-center gap-4">
@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
+import KakaoLoginButton from '@/components/KakaoLoginButton.vue'
 
 const userStore = useUserStore()
 

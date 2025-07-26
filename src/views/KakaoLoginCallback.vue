@@ -17,9 +17,9 @@ onMounted(async () => {
       })
 
       // ✅ 로그인 성공 후 토큰과 사용자 정보 저장
-      const { token, username, email, userId } = res.data
+      const { token, username } = res.data
       localStorage.setItem('token', token)
-      userStore.setUserInfo({ username, email, userId })
+      userStore.setUserInfo(username, token)
       router.push('/')
     } catch (err) {
       console.error('카카오 로그인 실패', err)
